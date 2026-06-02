@@ -19,3 +19,18 @@ resource "aws_instance" "demo" {
     Name = "terraform-demo"
   }
 }
+resource "aws_cloudwatch_metric_alarm" "cpu_high" {
+  alarm_name          = "ec2-cpu-high"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 80
+  alarm_description   = "CPU使用率が80%を超えたらアラート"
+
+  dimensions = {
+    InstanceId = aws_instance.demo.id
+  }
+}
